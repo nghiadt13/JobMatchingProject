@@ -5,3 +5,7 @@ coverage
 .env*.local
 pnpm-debug.log*
 .DS_Store
+
+# IDE and Editor
+.vscode
+.qoder
