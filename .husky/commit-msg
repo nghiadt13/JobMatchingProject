@@ -1,0 +1,5 @@
+msg=$(cat "$1")
+echo "$msg" | grep -Eq "^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .+" || {
+  echo "Invalid commit message. Use Conventional Commits, e.g. feat: add login form"
+  exit 1
+}
