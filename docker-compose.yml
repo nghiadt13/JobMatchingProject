@@ -17,28 +17,29 @@ services:
       - NEXT_PUBLIC_API_URL=http://backend:8080/api
       - NEXT_PUBLIC_AI_API_URL=http://ai-service:8000/api
       - WATCHPACK_POLLING=true
-    networks:
-      - job-matching-network
-    depends_on:
-      - backend
-      - ai-service
 
-  backend:
-    image: openjdk:21-slim
-    container_name: job-matching-backend
-    ports:
-      - "8080:8080"
-    networks:
-      - job-matching-network
+    # networks:
+    #   - job-matching-network
+    # depends_on:
+    #   - backend
+    #   - ai-service
 
-  ai-service:
-    image: python:3.11-slim
-    container_name: job-matching-ai
-    ports:
-      - "8000:8000"
-    networks:
-      - job-matching-network
+#   backend:
+#     image: openjdk:21-slim
+#     container_name: job-matching-backend
+#     ports:
+#       - "8080:8080"
+#     networks:
+#       - job-matching-network
 
-networks:
-  job-matching-network:
-    driver: bridge
+#   ai-service:
+#     image: python:3.11-slim
+#     container_name: job-matching-ai
+#     ports:
+#       - "8000:8000"
+#     networks:
+#       - job-matching-network
+
+# networks:
+#   job-matching-network:
+#     driver: bridge
