@@ -1,21 +1,27 @@
-import Link from "next/link";
+import BestJobsSection from "@/components/home/BestJobsSection";
+import CareerTipsSection from "@/components/home/CareerTipsSection";
+import FeaturedCompaniesSection from "@/components/home/FeaturedCompaniesSection";
+import Footer from "@/components/home/Footer";
+import HeroSection from "@/components/home/HeroSection";
+import JobMarketSection from "@/components/home/JobMarketSection";
+import Navbar from "@/components/home/Navbar";
+import PersonalBrandingSection from "@/components/home/PersonalBrandingSection";
+import SelfDiscoverySection from "@/components/home/SelfDiscoverySection";
+import TopIndustriesSection from "@/components/home/TopIndustriesSection";
 
 export default function LandingPage() {
   return (
-    <main className="space-y-4 p-6">
-      <h1 className="text-3xl font-bold">Job Matching Platform</h1>
-      <p>Frontend scaffold is ready.</p>
-      <div className="flex gap-4">
-        <Link className="underline" href="/login">
-          Login
-        </Link>
-        <Link className="underline" href="/dashboard">
-          Candidate dashboard
-        </Link>
-        <Link className="underline" href="/employer/dashboard">
-          Employer dashboard
-        </Link>
-      </div>
-    </main>
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <HeroSection />
+      <JobMarketSection />
+      <BestJobsSection />
+      <TopIndustriesSection />
+      <FeaturedCompaniesSection />
+      <PersonalBrandingSection />
+      <SelfDiscoverySection />
+      <CareerTipsSection />
+      <Footer />
+    </div>
   );
 }
