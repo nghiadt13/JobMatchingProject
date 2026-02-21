@@ -2,6 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Heart, MapPin, Sparkles } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 
 const locations = [
@@ -19,6 +20,7 @@ const jobs = [
     salary: "20-35 triệu",
     location: "Hà Nội",
     hot: true,
+    logo: "https://upload.wikimedia.org/wikipedia/commons/1/11/FPT_logo.svg",
   },
   {
     title: "Product Manager",
@@ -26,6 +28,7 @@ const jobs = [
     salary: "30-45 triệu",
     location: "TP. HCM",
     hot: true,
+    logo: "https://upload.wikimedia.org/wikipedia/commons/e/e8/VNG_Corporation_Logo.svg",
   },
   {
     title: "Data Analyst",
@@ -33,6 +36,7 @@ const jobs = [
     salary: "18-28 triệu",
     location: "TP. HCM",
     hot: false,
+    logo: "https://upload.wikimedia.org/wikipedia/commons/f/fe/Shopee.svg",
   },
   {
     title: "DevOps Engineer",
@@ -40,6 +44,7 @@ const jobs = [
     salary: "25-40 triệu",
     location: "TP. HCM",
     hot: true,
+    logo: "https://upload.wikimedia.org/wikipedia/vi/d/d1/MoMo_Logo.svg",
   },
   {
     title: "Graphic Designer",
@@ -47,6 +52,7 @@ const jobs = [
     salary: "12-18 triệu",
     location: "Hà Nội",
     hot: false,
+    logo: "https://salt.tikicdn.com/ts/upload/ae/f1/ad/c8d31efc435551348ea4910e3f40994d.png",
   },
   {
     title: "Sales Executive",
@@ -54,6 +60,7 @@ const jobs = [
     salary: "15-25 triệu",
     location: "Hà Nội",
     hot: false,
+    logo: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Logo_Vingroup.svg",
   },
   {
     title: "Backend Developer (Java)",
@@ -61,6 +68,7 @@ const jobs = [
     salary: "25-40 triệu",
     location: "Hà Nội",
     hot: true,
+    logo: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Logo_Techcombank.svg",
   },
   {
     title: "HR Business Partner",
@@ -68,6 +76,7 @@ const jobs = [
     salary: "20-32 triệu",
     location: "Đà Nẵng",
     hot: false,
+    logo: "https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg",
   },
 ];
 
@@ -93,7 +102,7 @@ const BestJobsSection = () => {
               <button
                 key={loc}
                 onClick={() => setActiveTab(loc)}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   activeTab === loc
                     ? "bg-navy text-white"
                     : "border bg-card text-muted-foreground hover:border-gold/50"
@@ -117,8 +126,14 @@ const BestJobsSection = () => {
                   HOT
                 </span>
               )}
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-navy/10 font-bold text-navy">
-                {job.company.charAt(0)}
+              <div className="mb-3 flex h-12 w-12 items-center justify-center overflow-hidden rounded-lg bg-navy/10">
+                <Image
+                  src={job.logo}
+                  alt={job.company}
+                  width={48}
+                  height={48}
+                  className="h-full w-full object-cover"
+                />
               </div>
               <h3 className="mb-1 line-clamp-2 text-sm font-semibold text-foreground transition-colors group-hover:text-gold">
                 {job.title}

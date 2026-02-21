@@ -48,15 +48,19 @@ const Navbar = () => {
 
         {/* Auth Buttons */}
         <div className="hidden items-center gap-3 lg:flex">
-          <Button
-            variant="ghost"
-            className="text-white/80 hover:bg-navy-light hover:text-white"
-          >
-            Đăng nhập
-          </Button>
-          <Button className="bg-gold font-semibold text-navy hover:bg-gold-dark">
-            Đăng ký
-          </Button>
+          <Link href="/auth/login">
+            <Button
+              variant="ghost"
+              className="text-white/80 hover:bg-navy-light hover:text-white"
+            >
+              Đăng nhập
+            </Button>
+          </Link>
+          <Link href="/auth/login?tab=signup">
+            <Button className="bg-gold font-semibold text-navy hover:bg-gold-dark">
+              Đăng ký
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile toggle */}
@@ -84,15 +88,19 @@ const Navbar = () => {
             Cẩm nang nghề nghiệp
           </a>
           <div className="flex gap-3 pt-2">
-            <Button
-              variant="outline"
-              className="flex-1 border-white/30 text-white"
-            >
-              Đăng nhập
-            </Button>
-            <Button className="flex-1 bg-gold font-semibold text-navy hover:bg-gold-dark">
-              Đăng ký
-            </Button>
+            <Link href="/auth/login" className="flex-1">
+              <Button
+                variant="outline"
+                className="w-full border-white/30 text-white"
+              >
+                Đăng nhập
+              </Button>
+            </Link>
+            <Link href="/auth/login?tab=signup" className="flex-1">
+              <Button className="w-full bg-gold font-semibold text-navy hover:bg-gold-dark">
+                Đăng ký
+              </Button>
+            </Link>
           </div>
         </div>
       )}

@@ -2,7 +2,14 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["localhost"],
+    domains: [
+      "localhost",
+      "www.fpt.com.vn",
+      "logodix.com",
+      "www.logo.wine",
+      "upload.wikimedia.org",
+      "salt.tikicdn.com",
+    ],
     formats: ["image/avif", "image/webp"],
   },
   env: {

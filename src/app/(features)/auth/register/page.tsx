@@ -1,10 +1,5 @@
-import { RegisterForm } from "@/components/features/auth/register-form";
+import { redirect } from "next/navigation";
 
 export default function RegisterPage() {
-  return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">Register</h1>
-      <RegisterForm />
-    </div>
-  );
+  redirect("/auth/login?tab=signup");
 }

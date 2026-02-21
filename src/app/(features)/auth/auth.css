@@ -1,0 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap");
+
+/* Auth-specific CSS Variables */
+.auth-layout {
+  /* Login.html Color Tokens */
+  --navy: 222 60% 15%;
+  --navy-mid: 222 50% 18%;
+  --navy-light: 222 50% 23%;
+  --navy-glow: 222 50% 29%;
+  --gold: 43 65% 55%;
+  --gold-light: 43 70% 66%;
+  --gold-dim: 43 60% 40%;
+  --gold-pale: rgba(212, 168, 67, 0.12);
+  --white: 40 30% 93%;
+  --muted-custom: rgba(245, 240, 232, 0.45);
+  --border-custom: rgba(212, 168, 67, 0.2);
+  --shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+
+  font-family: "DM Sans", sans-serif;
+  background-color: hsl(var(--navy));
+  color: hsl(var(--white));
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Font utilities for auth pages */
+.auth-layout .font-display {
+  font-family: "Playfair Display", serif;
+}
+
+.auth-layout .font-sans {
+  font-family: "DM Sans", sans-serif;
+}
