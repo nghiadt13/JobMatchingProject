@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JobMatching — Find Your Dream Career</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --navy: #0f1b3d;
+        --navy-light: #1a2d5a;
+        --navy-dark: #08112a;
+        --gold: #d4a843;
+        --gold-light: #e8c06a;
+        --gold-dim: rgba(212, 168, 67, 0.15);
+        --white: #f8f4ed;
+        --gray: rgba(248, 244, 237, 0.5);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--navy-dark);
+        min-height: 100vh;
+        overflow: hidden;
+        color: var(--white);
+      }
+
+      /* ── Background canvas ── */
+      #bg-canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      /* ── Layout ── */
+      .wrapper {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 100vh;
+      }
+
+      /* ── Left panel ── */
+      .left-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 60px 72px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .left-panel::before {
+        content: "";
+        position: absolute;
+        top: -100px;
+        right: -100px;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(
+          circle,
+          rgba(212, 168, 67, 0.12) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+        animation: pulse-glow 4s ease-in-out infinite;
+      }
+
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.1);
+          opacity: 0.6;
+        }
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 64px;
+        animation: slide-in-left 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .brand-icon {
+        width: 44px;
+        height: 44px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        font-size: 20px;
+        box-shadow: 0 8px 24px rgba(212, 168, 67, 0.4);
+      }
+
+      .brand-name {
+        font-family: "Playfair Display", serif;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+      }
+
+      .brand-name span {
+        color: var(--gold);
+      }
+
+      .hero-tag {
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 20px;
+        animation: slide-in-left 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+      }
+
+      .hero-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(38px, 4vw, 54px);
+        font-weight: 900;
+        line-height: 1.1;
+        margin-bottom: 24px;
+        animation: slide-in-left 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+      }
+
+      .hero-title em {
+        font-style: italic;
+        color: var(--gold);
+        position: relative;
+      }
+
+      .hero-title em::after {
+        content: "";
+        position: absolute;
+        bottom: 2px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold), transparent);
+      }
+
+      .hero-desc {
+        font-size: 15px;
+        line-height: 1.7;
+        color: var(--gray);
+        max-width: 400px;
+        margin-bottom: 48px;
+        animation: slide-in-left 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+      }
+
+      .stats-row {
+        display: flex;
+        gap: 40px;
+        animation: slide-in-left 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+      }
+
+      .stat {
+      }
+      .stat-num {
+        font-family: "Playfair Display", serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--gold);
+        line-height: 1;
+      }
+      .stat-label {
+        font-size: 12px;
+        color: var(--gray);
+        margin-top: 4px;
+      }
+
+      .divider-v {
+        width: 1px;
+        background: rgba(248, 244, 237, 0.1);
+        align-self: stretch;
+      }
+
+      /* Floating cards */
+      .float-cards {
+        position: absolute;
+        bottom: 48px;
+        left: 72px;
+        right: 72px;
+        animation: slide-in-left 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+      }
+
+      .job-card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(212, 168, 67, 0.2);
+        border-radius: 16px;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        backdrop-filter: blur(10px);
+        margin-bottom: 10px;
+        transition:
+          transform 0.3s,
+          border-color 0.3s;
+        cursor: default;
+      }
+
+      .job-card:hover {
+        transform: translateX(6px);
+        border-color: rgba(212, 168, 67, 0.5);
+      }
+
+      .job-card:nth-child(1) {
+        animation: float-card 6s ease-in-out infinite;
+      }
+      .job-card:nth-child(2) {
+        animation: float-card 6s ease-in-out 1s infinite;
+      }
+
+      @keyframes float-card {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-4px);
+        }
+      }
+
+      .job-logo {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+
+      .job-info {
+        flex: 1;
+      }
+      .job-title-sm {
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .job-company {
+        font-size: 11px;
+        color: var(--gray);
+        margin-top: 2px;
+      }
+
+      .job-badge {
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        background: var(--gold-dim);
+        color: var(--gold);
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      /* ── Right panel ── */
+      .right-panel {
+        background: rgba(255, 255, 255, 0.02);
+        border-left: 1px solid rgba(248, 244, 237, 0.06);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+        position: relative;
+      }
+
+      .form-card {
+        width: 100%;
+        max-width: 420px;
+        animation: slide-in-right 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+      }
+
+      /* Tab switcher */
+      .tab-switcher {
+        display: flex;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(248, 244, 237, 0.08);
+        border-radius: 16px;
+        padding: 4px;
+        margin-bottom: 36px;
+        position: relative;
+      }
+
+      .tab-slider {
+        position: absolute;
+        top: 4px;
+        bottom: 4px;
+        width: calc(50% - 4px);
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        border-radius: 12px;
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 4px 16px rgba(212, 168, 67, 0.35);
+      }
+
+      .tab-slider.right {
+        transform: translateX(calc(100% + 8px));
+      }
+
+      .tab-btn {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        background: none;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+        border-radius: 12px;
+        transition: color 0.3s;
+        color: var(--gray);
+      }
+
+      .tab-btn.active {
+        color: var(--navy-dark);
+      }
+
+      /* Form title */
+      .form-heading {
+        font-family: "Playfair Display", serif;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        line-height: 1.2;
+      }
+
+      .form-sub {
+        font-size: 13px;
+        color: var(--gray);
+        margin-bottom: 28px;
+      }
+
+      /* Role selector */
+      .role-selector {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 24px;
+      }
+
+      .role-btn {
+        border: 1px solid rgba(248, 244, 237, 0.1);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: all 0.25s;
+        color: var(--gray);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .role-btn .role-icon {
+        font-size: 18px;
+      }
+
+      .role-btn:hover {
+        border-color: rgba(212, 168, 67, 0.4);
+        color: var(--white);
+      }
+
+      .role-btn.active {
+        border-color: var(--gold);
+        background: var(--gold-dim);
+        color: var(--gold);
+      }
+
+      /* Input group */
+      .input-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .input-row.full {
+        grid-template-columns: 1fr;
+      }
+
+      .field {
+        margin-bottom: 14px;
+        position: relative;
+      }
+
+      .field label {
+        display: block;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--gray);
+        margin-bottom: 6px;
+        letter-spacing: 0.3px;
+      }
+
+      .field input {
+        width: 100%;
+        padding: 13px 16px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(248, 244, 237, 0.1);
+        border-radius: 12px;
+        color: var(--white);
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        outline: none;
+        transition: all 0.25s;
+      }
+
+      .field input::placeholder {
+        color: rgba(248, 244, 237, 0.25);
+      }
+
+      .field input:focus {
+        border-color: var(--gold);
+        background: rgba(212, 168, 67, 0.05);
+        box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.1);
+      }
+
+      .field .eye-btn {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(calc(-50% + 8px));
+        background: none;
+        border: none;
+        color: var(--gray);
+        cursor: pointer;
+        font-size: 16px;
+        padding: 2px;
+        transition: color 0.2s;
+      }
+      .field .eye-btn:hover {
+        color: var(--gold);
+      }
+
+      /* Forgot link */
+      .forgot {
+        text-align: right;
+        margin-bottom: 20px;
+        margin-top: -8px;
+      }
+      .forgot a {
+        font-size: 12px;
+        color: var(--gold);
+        text-decoration: none;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+      }
+      .forgot a:hover {
+        opacity: 1;
+      }
+
+      /* Submit button */
+      .btn-submit {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(
+          135deg,
+          var(--gold) 0%,
+          var(--gold-light) 100%
+        );
+        color: var(--navy-dark);
+        border: none;
+        border-radius: 14px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 0.3px;
+        position: relative;
+        overflow: hidden;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        box-shadow: 0 8px 24px rgba(212, 168, 67, 0.35);
+        margin-bottom: 20px;
+      }
+
+      .btn-submit::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.25),
+          transparent
+        );
+        transform: translateX(-100%);
+        transition: transform 0.5s;
+      }
+
+      .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(212, 168, 67, 0.5);
+      }
+      .btn-submit:hover::before {
+        transform: translateX(100%);
+      }
+      .btn-submit:active {
+        transform: translateY(0);
+      }
+
+      /* Divider */
+      .or-divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+        color: var(--gray);
+        font-size: 12px;
+      }
+      .or-divider::before,
+      .or-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: rgba(248, 244, 237, 0.1);
+      }
+
+      /* Social buttons */
+      .social-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .btn-social {
+        padding: 11px;
+        border: 1px solid rgba(248, 244, 237, 0.1);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+        color: var(--white);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.25s;
+      }
+
+      .btn-social:hover {
+        border-color: rgba(212, 168, 67, 0.3);
+        background: rgba(212, 168, 67, 0.06);
+      }
+
+      .btn-social svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      /* Terms */
+      .terms {
+        font-size: 11px;
+        color: var(--gray);
+        text-align: center;
+        margin-top: 16px;
+        line-height: 1.6;
+      }
+      .terms a {
+        color: var(--gold);
+        text-decoration: none;
+      }
+
+      /* Form panels */
+      .form-panel {
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .form-panel.hidden {
+        display: none;
+      }
+
+      /* Animations */
+      @keyframes slide-in-left {
+        from {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes slide-in-right {
+        from {
+          opacity: 0;
+          transform: translateX(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* Particle dots */
+      .dots-bg {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background-image: radial-gradient(
+          circle,
+          rgba(212, 168, 67, 0.08) 1px,
+          transparent 1px
+        );
+        background-size: 40px 40px;
+        pointer-events: none;
+      }
+
+      /* Loading spinner */
+      .btn-submit.loading {
+        pointer-events: none;
+      }
+      .btn-submit.loading .btn-text {
+        opacity: 0;
+      }
+      .btn-submit.loading::after {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border: 2px solid transparent;
+        border-top-color: var(--navy-dark);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      @keyframes spin {
+        to {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+
+      /* Success toast */
+      .toast {
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: var(--navy-dark);
+        padding: 14px 20px;
+        border-radius: 14px;
+        font-weight: 600;
+        font-size: 14px;
+        z-index: 100;
+        transform: translateY(-80px);
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 8px 24px rgba(212, 168, 67, 0.4);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* Responsive */
+      @media (max-width: 900px) {
+        .wrapper {
+          grid-template-columns: 1fr;
+        }
+        .left-panel {
+          display: none;
+        }
+        .right-panel {
+          padding: 32px 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dots-bg"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="toast" id="toast">
+      ✓ <span id="toast-msg">Đăng nhập thành công!</span>
+    </div>
+
+    <div class="wrapper">
+      <!-- LEFT PANEL -->
+      <div class="left-panel">
+        <div class="brand">
+          <div class="brand-icon">💼</div>
+          <div class="brand-name">Job<span>Matching</span></div>
+        </div>
+
+        <p class="hero-tag">Nền tảng tuyển dụng thông minh</p>
+        <h1 class="hero-title">Tìm kiếm<br /><em>cơ hội</em><br />của bạn.</h1>
+        <p class="hero-desc">
+          Kết nối hàng nghìn ứng viên tài năng với những công ty hàng đầu. AI
+          của chúng tôi giúp bạn tìm được công việc phù hợp nhất.
+        </p>
+
+        <div class="stats-row">
+          <div class="stat">
+            <div class="stat-num" data-target="12400">0</div>
+            <div class="stat-label">Vị trí tuyển dụng</div>
+          </div>
+          <div class="divider-v"></div>
+          <div class="stat">
+            <div class="stat-num" data-target="3800">0</div>
+            <div class="stat-label">Công ty đối tác</div>
+          </div>
+          <div class="divider-v"></div>
+          <div class="stat">
+            <div class="stat-num" data-target="98">0</div>
+            <div class="stat-label">% Hài lòng</div>
+          </div>
+        </div>
+
+        <div class="float-cards">
+          <div class="job-card">
+            <div
+              class="job-logo"
+              style="background: rgba(66, 133, 244, 0.2); color: #4285f4"
+            >
+              🏢
+            </div>
+            <div class="job-info">
+              <div class="job-title-sm">Senior UX Designer</div>
+              <div class="job-company">Vingroup • Hà Nội</div>
+            </div>
+            <div class="job-badge">$2,500/tháng</div>
+          </div>
+          <div class="job-card">
+            <div
+              class="job-logo"
+              style="background: rgba(0, 180, 100, 0.15); color: #00b464"
+            >
+              💻
+            </div>
+            <div class="job-info">
+              <div class="job-title-sm">Full-stack Engineer</div>
+              <div class="job-company">FPT Software • Remote</div>
+            </div>
+            <div class="job-badge">$3,200/tháng</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="right-panel">
+        <div class="form-card">
+          <div class="tab-switcher">
+            <div class="tab-slider" id="tab-slider"></div>
+            <button
+              class="tab-btn active"
+              id="tab-login"
+              onclick="switchTab('login')"
+            >
+              Đăng nhập
+            </button>
+            <button
+              class="tab-btn"
+              id="tab-signup"
+              onclick="switchTab('signup')"
+            >
+              Đăng ký
+            </button>
+          </div>
+
+          <!-- LOGIN FORM -->
+          <div class="form-panel" id="panel-login">
+            <h2 class="form-heading">Chào mừng trở lại 👋</h2>
+            <p class="form-sub">Tiếp tục hành trình sự nghiệp của bạn.</p>
+
+            <div class="field">
+              <label>Email</label>
+              <input
+                type="email"
+                placeholder="name@example.com"
+                id="login-email"
+              />
+            </div>
+
+            <div class="field">
+              <label>Mật khẩu</label>
+              <input type="password" placeholder="••••••••" id="login-pass" />
+              <button class="eye-btn" onclick="togglePass('login-pass', this)">
+                👁
+              </button>
+            </div>
+
+            <div class="forgot"><a href="#">Quên mật khẩu?</a></div>
+
+            <button class="btn-submit" onclick="handleLogin(this)">
+              <span class="btn-text">Đăng nhập</span>
+            </button>
+
+            <div class="or-divider">hoặc tiếp tục với</div>
+
+            <div class="social-row">
+              <button class="btn-social" onclick="socialLogin('Google')">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    fill="#4285F4"
+                  />
+                  <path
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    fill="#34A853"
+                  />
+                  <path
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                    fill="#FBBC05"
+                  />
+                  <path
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                    fill="#EA4335"
+                  />
+                </svg>
+                Google
+              </button>
+              <button class="btn-social" onclick="socialLogin('LinkedIn')">
+                <svg viewBox="0 0 24 24" fill="#0A66C2">
+                  <path
+                    d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                  />
+                </svg>
+                LinkedIn
+              </button>
+            </div>
+          </div>
+
+          <!-- SIGNUP FORM -->
+          <div class="form-panel hidden" id="panel-signup">
+            <h2 class="form-heading">Tạo tài khoản 🚀</h2>
+            <p class="form-sub">Bạn là ai trong thị trường việc làm?</p>
+
+            <div class="role-selector">
+              <button
+                class="role-btn active"
+                id="role-candidate"
+                onclick="selectRole('candidate')"
+              >
+                <span class="role-icon">🎓</span> Ứng viên
+              </button>
+              <button
+                class="role-btn"
+                id="role-employer"
+                onclick="selectRole('employer')"
+              >
+                <span class="role-icon">🏢</span> Nhà tuyển dụng
+              </button>
+            </div>
+
+            <div class="input-row">
+              <div class="field">
+                <label>Họ</label>
+                <input type="text" placeholder="Nguyễn" />
+              </div>
+              <div class="field">
+                <label>Tên</label>
+                <input type="text" placeholder="Văn A" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Email</label>
+              <input type="email" placeholder="name@example.com" />
+            </div>
+
+            <div class="field">
+              <label>Mật khẩu</label>
+              <input
+                type="password"
+                placeholder="Tối thiểu 8 ký tự"
+                id="signup-pass"
+              />
+              <button class="eye-btn" onclick="togglePass('signup-pass', this)">
+                👁
+              </button>
+            </div>
+
+            <div class="field" id="company-field" style="display: none">
+              <label>Tên công ty</label>
+              <input type="text" placeholder="Công ty của bạn" />
+            </div>
+
+            <button class="btn-submit" onclick="handleSignup(this)">
+              <span class="btn-text">Tạo tài khoản</span>
+            </button>
+
+            <div class="terms">
+              Bằng cách đăng ký, bạn đồng ý với
+              <a href="#">Điều khoản dịch vụ</a> và
+              <a href="#">Chính sách bảo mật</a> của chúng tôi.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ── Animated background ──
+      const canvas = document.getElementById("bg-canvas");
+      const ctx = canvas.getContext("2d");
+      let W,
+        H,
+        particles = [];
+
+      function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+
+      function Particle() {
+        this.reset = function () {
+          this.x = Math.random() * W;
+          this.y = Math.random() * H;
+          this.vx = (Math.random() - 0.5) * 0.3;
+          this.vy = (Math.random() - 0.5) * 0.3;
+          this.r = Math.random() * 1.5 + 0.5;
+          this.alpha = Math.random() * 0.4 + 0.1;
+          this.gold = Math.random() > 0.7;
+        };
+        this.reset();
+      }
+
+      function initParticles() {
+        particles = Array.from({ length: 80 }, () => {
+          const p = new Particle();
+          return p;
+        });
+      }
+
+      function animateBg() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach((p) => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > W) p.vx *= -1;
+          if (p.y < 0 || p.y > H) p.vy *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.gold
+            ? `rgba(212,168,67,${p.alpha})`
+            : `rgba(248,244,237,${p.alpha * 0.4})`;
+          ctx.fill();
+        });
+
+        // Connect nearby particles
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 100) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(212,168,67,${0.06 * (1 - dist / 100)})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(animateBg);
+      }
+
+      resize();
+      initParticles();
+      animateBg();
+      window.addEventListener("resize", () => {
+        resize();
+        initParticles();
+      });
+
+      // ── Counter animation ──
+      function animateCounter(el) {
+        const target = parseInt(el.dataset.target);
+        const duration = 1800;
+        const start = performance.now();
+        function update(now) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const suffix = target > 100 ? "+" : "%";
+          el.textContent = Math.floor(eased * target).toLocaleString() + suffix;
+          if (progress < 1) requestAnimationFrame(update);
+        }
+        requestAnimationFrame(update);
+      }
+
+      setTimeout(() => {
+        document
+          .querySelectorAll("[data-target]")
+          .forEach((el) => animateCounter(el));
+      }, 600);
+
+      // ── Tab switching ──
+      let currentTab = "login";
+      function switchTab(tab) {
+        if (tab === currentTab) return;
+        currentTab = tab;
+        const slider = document.getElementById("tab-slider");
+        const loginPanel = document.getElementById("panel-login");
+        const signupPanel = document.getElementById("panel-signup");
+        const loginBtn = document.getElementById("tab-login");
+        const signupBtn = document.getElementById("tab-signup");
+
+        if (tab === "signup") {
+          slider.classList.add("right");
+          loginBtn.classList.remove("active");
+          signupBtn.classList.add("active");
+          loginPanel.classList.add("hidden");
+          signupPanel.classList.remove("hidden");
+        } else {
+          slider.classList.remove("right");
+          signupBtn.classList.remove("active");
+          loginBtn.classList.add("active");
+          signupPanel.classList.add("hidden");
+          loginPanel.classList.remove("hidden");
+        }
+      }
+
+      // ── Role selector ──
+      function selectRole(role) {
+        document
+          .querySelectorAll(".role-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById("role-" + role).classList.add("active");
+        const companyField = document.getElementById("company-field");
+        companyField.style.display = role === "employer" ? "block" : "none";
+      }
+
+      // ── Toggle password ──
+      function togglePass(id, btn) {
+        const input = document.getElementById(id);
+        if (input.type === "password") {
+          input.type = "text";
+          btn.textContent = "🔒";
+        } else {
+          input.type = "password";
+          btn.textContent = "👁";
+        }
+      }
+
+      // ── Toast ──
+      function showToast(msg) {
+        const toast = document.getElementById("toast");
+        document.getElementById("toast-msg").textContent = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3000);
+      }
+
+      // ── Login handler ──
+      function handleLogin(btn) {
+        btn.classList.add("loading");
+        setTimeout(() => {
+          btn.classList.remove("loading");
+          showToast("Đăng nhập thành công! 🎉");
+        }, 1600);
+      }
+
+      // ── Signup handler ──
+      function handleSignup(btn) {
+        btn.classList.add("loading");
+        setTimeout(() => {
+          btn.classList.remove("loading");
+          showToast("Tài khoản đã được tạo! Welcome aboard 🚀");
+        }, 1800);
+      }
+
+      // ── Social login ──
+      function socialLogin(provider) {
+        showToast(`Đang kết nối với ${provider}...`);
+      }
+    </script>
+  </body>
+</html>

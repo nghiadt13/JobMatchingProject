@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { ROUTES } from "@/constants/routes";
 import { ChevronDown, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -48,7 +49,7 @@ const Navbar = () => {
 
         {/* Auth Buttons */}
         <div className="hidden items-center gap-3 lg:flex">
-          <Link href="/auth/login">
+          <Link href={ROUTES.auth.login}>
             <Button
               variant="ghost"
               className="text-white/80 hover:bg-navy-light hover:text-white"
@@ -56,7 +57,7 @@ const Navbar = () => {
               Đăng nhập
             </Button>
           </Link>
-          <Link href="/auth/login?tab=signup">
+          <Link href={ROUTES.auth.register}>
             <Button className="bg-gold font-semibold text-navy hover:bg-gold-dark">
               Đăng ký
             </Button>
@@ -88,7 +89,7 @@ const Navbar = () => {
             Cẩm nang nghề nghiệp
           </a>
           <div className="flex gap-3 pt-2">
-            <Link href="/auth/login" className="flex-1">
+            <Link href={ROUTES.auth.login} className="flex-1">
               <Button
                 variant="outline"
                 className="w-full border-white/30 text-white"
@@ -96,7 +97,7 @@ const Navbar = () => {
                 Đăng nhập
               </Button>
             </Link>
-            <Link href="/auth/login?tab=signup" className="flex-1">
+            <Link href={ROUTES.auth.register} className="flex-1">
               <Button className="w-full bg-gold font-semibold text-navy hover:bg-gold-dark">
                 Đăng ký
               </Button>
