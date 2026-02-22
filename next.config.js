@@ -26,6 +26,12 @@ const nextConfig = {
         tls: false,
       };
     }
+
+    // Fix cache issues on Windows
+    config.cache = {
+      type: "memory",
+    };
+
     return config;
   },
   experimental: {

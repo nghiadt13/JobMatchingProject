@@ -1,3 +1,4 @@
+import AIJobMatchingSection from "@/components/home/AIJobMatchingSection";
 import BestJobsSection from "@/components/home/BestJobsSection";
 import CareerTipsSection from "@/components/home/CareerTipsSection";
 import FeaturedCompaniesSection from "@/components/home/FeaturedCompaniesSection";
@@ -14,6 +15,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-background">
       <Navbar />
       <HeroSection />
+      <AIJobMatchingSection />
       <JobMarketSection />
       <BestJobsSection />
       <TopIndustriesSection />

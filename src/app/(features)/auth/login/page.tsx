@@ -28,7 +28,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="w-full max-w-[440px] animate-pop-in rounded-3xl border border-[rgba(212,168,67,0.2)] bg-[rgba(22,35,71,0.7)] p-10 shadow-[0_30px_80px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(212,168,67,0.1)] backdrop-blur-xl">
+    <div className="w-full max-w-[580px] animate-pop-in rounded-3xl border border-[rgba(212,168,67,0.2)] bg-[rgba(22,35,71,0.7)] p-12 shadow-[0_30px_80px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(212,168,67,0.1)] backdrop-blur-xl">
       {/* Gold line at top */}
       <div className="absolute left-0 right-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-[hsl(var(--gold))] to-transparent opacity-60" />
 

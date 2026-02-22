@@ -2,7 +2,16 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { vietnamLocations } from "@/data/vietnam-locations";
 import { MapPin, Play, Search } from "lucide-react";
+import { useState } from "react";
 
 const categories = [
   "Kinh doanh / Bán hàng",
@@ -16,6 +25,26 @@ const categories = [
 ];
 
 const HeroSection = () => {
+  const [selectedCity, setSelectedCity] = useState<string>("");
+  const [selectedDistrict, setSelectedDistrict] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const selectedCityData = vietnamLocations.find(
+    (city) => city.code === selectedCity
+  );
+
+  const handleSearch = () => {
+    const searchParams = {
+      query: searchQuery,
+      city: selectedCityData?.name || "",
+      district:
+        selectedCityData?.districts.find((d) => d.code === selectedDistrict)
+          ?.name || "",
+    };
+    console.log("Search params:", searchParams);
+    // TODO: Implement search logic
+  };
+
   return (
     <section className="gradient-navy relative overflow-hidden">
       {/* Decorative circles */}
@@ -35,8 +64,8 @@ const HeroSection = () => {
         </div>
 
         {/* Search Bar */}
-        <div className="mx-auto mb-10 max-w-3xl rounded-xl border border-white/10 bg-white/10 p-2 backdrop-blur-md">
-          <div className="flex flex-col gap-2 md:flex-row">
+        <div className="mx-auto mb-10 max-w-5xl rounded-xl border border-white/10 bg-white/10 p-3 backdrop-blur-md">
+          <div className="flex flex-col gap-2 lg:flex-row">
             <div className="relative flex-1">
               <Search
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40"
@@ -44,20 +73,70 @@ const HeroSection = () => {
               />
               <Input
                 placeholder="Vị trí tuyển dụng, tên công ty..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="h-12 border-white/10 bg-white/10 pl-10 text-white placeholder:text-white/40"
               />
             </div>
-            <div className="relative w-full md:w-48">
+
+            {/* City Selector */}
+            <div className="relative w-full lg:w-48">
               <MapPin
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40"
+                className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-white/40"
                 size={18}
               />
-              <Input
-                placeholder="Địa điểm"
-                className="h-12 border-white/10 bg-white/10 pl-10 text-white placeholder:text-white/40"
-              />
+              <Select
+                value={selectedCity}
+                onValueChange={(value) => {
+                  setSelectedCity(value);
+                  setSelectedDistrict("");
+                }}
+              >
+                <SelectTrigger className="h-12 border-white/10 bg-white/10 pl-10 text-white">
+                  <SelectValue placeholder="Thành phố" />
+                </SelectTrigger>
+                <SelectContent className="max-h-[300px] border-white/10 bg-navy">
+                  {vietnamLocations.map((city) => (
+                    <SelectItem
+                      key={city.code}
+                      value={city.code}
+                      className="cursor-pointer text-white hover:bg-gold/20 hover:text-gold focus:bg-gold/20 focus:text-gold"
+                    >
+                      {city.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-            <Button className="h-12 bg-gold px-8 font-bold text-navy hover:bg-gold-dark">
+
+            {/* District Selector */}
+            <div className="w-full lg:w-48">
+              <Select
+                value={selectedDistrict}
+                onValueChange={setSelectedDistrict}
+                disabled={!selectedCity}
+              >
+                <SelectTrigger className="h-12 border-white/10 bg-white/10 text-white disabled:opacity-50">
+                  <SelectValue placeholder="Quận/Huyện" />
+                </SelectTrigger>
+                <SelectContent className="max-h-[300px] border-white/10 bg-navy">
+                  {selectedCityData?.districts.map((district) => (
+                    <SelectItem
+                      key={district.code}
+                      value={district.code}
+                      className="cursor-pointer text-white hover:bg-gold/20 hover:text-gold focus:bg-gold/20 focus:text-gold"
+                    >
+                      {district.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Button
+              onClick={handleSearch}
+              className="h-12 bg-gold px-8 font-bold text-navy hover:bg-gold-dark"
+            >
               <Search size={18} /> Tìm kiếm
             </Button>
           </div>

@@ -209,7 +209,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       <Background />
       <div className="relative z-10 grid min-h-screen lg:grid-cols-2">
         <LeftPanel />
-        <div className="flex items-center justify-center p-5 lg:p-10">
+        <div className="flex items-center justify-start p-5 lg:p-10 lg:pl-16">
           {children}
         </div>
       </div>

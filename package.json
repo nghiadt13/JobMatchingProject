@@ -10,7 +10,9 @@
     "lint:fix": "next lint --fix",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "type-check": "tsc --noEmit",
-    "prepare": "husky"
+    "prepare": "husky",
+    "clean": "powershell -ExecutionPolicy Bypass -File ./clean-cache.ps1",
+    "dev:clean": "npm run clean && next dev"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.0",
